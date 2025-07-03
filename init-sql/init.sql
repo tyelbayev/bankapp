@@ -1,0 +1,11 @@
+CREATE SCHEMA IF NOT EXISTS accounts_schema;
+CREATE SCHEMA IF NOT EXISTS auth_schema;
+CREATE SCHEMA IF NOT EXISTS blocker_schema;
+CREATE SCHEMA IF NOT EXISTS cash_schema;
+CREATE SCHEMA IF NOT EXISTS config_schema;
+CREATE SCHEMA IF NOT EXISTS discovery_schema;
+CREATE SCHEMA IF NOT EXISTS exchange_generator_schema;
+CREATE SCHEMA IF NOT EXISTS exchange_schema;
+CREATE SCHEMA IF NOT EXISTS gateway_schema;
+CREATE SCHEMA IF NOT EXISTS notifications_schema;
+CREATE SCHEMA IF NOT EXISTS transfer_schema;
