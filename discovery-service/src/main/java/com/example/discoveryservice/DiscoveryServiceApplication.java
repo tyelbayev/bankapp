@@ -1,11 +1,12 @@
-package com.example.accountsservice;
+package com.example.discoveryservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AccountsServiceApplication {
+public class DiscoveryServiceApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(AccountsServiceApplication.class, args);
+        SpringApplication.run(DiscoveryServiceApplication.class, args);
     }
 }

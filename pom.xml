@@ -9,9 +9,14 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Bank Application</name>
-
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+        <relativePath/>
+    </parent>
     <modules>
-        <module>front-ui</module>
+<!--        <module>front-ui</module>-->
         <module>accounts-service</module>
         <module>cash-service</module>
         <module>transfer-service</module>
