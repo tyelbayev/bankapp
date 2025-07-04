@@ -1,3 +1,5 @@
+server:
+  port: 8081
 spring:
   application:
     name: accounts-service
@@ -16,3 +18,7 @@ spring:
     properties:
       hibernate:
         default_schema: accounts_schema
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

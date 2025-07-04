@@ -1,3 +1,5 @@
+server:
+  port: 8761
 spring:
   application:
     name: discovery-service
@@ -16,3 +18,7 @@ spring:
     properties:
       hibernate:
         default_schema: discovery_schema
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
