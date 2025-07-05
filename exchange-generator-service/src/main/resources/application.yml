@@ -16,3 +16,9 @@ spring:
     properties:
       hibernate:
         default_schema: exchange_generator_schema
+server:
+  port: 8086
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
