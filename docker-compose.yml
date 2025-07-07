@@ -24,7 +24,7 @@ services:
       KC_DB: dev-file
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    volumes:
-      - ./keycloak-store-realm.json:/opt/keycloak/data/import/store-realm.json
+#    volumes:
+#      - ./keycloak-store-realm.json:/opt/keycloak/data/import/store-realm.json
 volumes:
   pgdata:
