@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigDecimal;
+import java.math.*;
 import java.util.List;
 import java.util.Random;
 
@@ -33,7 +34,8 @@ public class GeneratorService {
                             case "CNY" -> "Юань";
                             default -> c;
                         },
-                        BigDecimal.valueOf(0.5 + (1.5 * random.nextDouble())).setScale(2, RoundingMode.HALF_UP)
+//                        BigDecimal.valueOf(0.5 + (1.5 * random.nextDouble())).setScale(2)
+                        BigDecimal.valueOf(0.5 + (1.5 * random.nextDouble())).setScale(2, BigDecimal.ROUND_HALF_UP)
                 )).toList();
 
         webClient.post()

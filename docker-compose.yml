@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
   postgres:
     image: postgres:16
     container_name: bank-postgres
@@ -17,6 +18,7 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0
+    container_name: bank-keycloak
     command: start-dev --import-realm
     ports:
       - "8089:8080"
@@ -26,5 +28,125 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
     volumes:
       - ./keycloak/import:/opt/keycloak/data/import
+
+#  config-service:
+#    image: bankapp/config-service
+#    build: ./config-service
+#    container_name: bank-config
+#    ports:
+#      - "8888:8888"
+#    volumes:
+#      - ../bankapp-config:/config
+#    environment:
+#      SPRING_PROFILES_ACTIVE: native
+#      SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS: file:/config
+#
+#  discovery-service:
+#    image: bankapp/discovery-service
+#    build: ./discovery-service
+#    container_name: bank-discovery
+#    ports:
+#      - "8761:8761"
+#    depends_on:
+#      - config-service
+#
+#  gateway-service:
+#    image: bankapp/gateway-service
+#    build: ./gateway-service
+#    container_name: bank-gateway
+#    ports:
+#      - "8088:8088"
+#    depends_on:
+#      - discovery-service
+#      - config-service
+#
+#  accounts-service:
+#    image: bankapp/accounts-service
+#    build: ./accounts-service
+#    container_name: bank-accounts
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      - postgres
+#      - discovery-service
+#      - config-service
+#
+#  auth-service:
+#    image: bankapp/auth-service
+#    build: ./auth-service
+#    container_name: bank-auth
+#    ports:
+#      - "8082:8082"
+#    depends_on:
+#      - keycloak
+#      - discovery-service
+#      - config-service
+#
+#  blocker-service:
+#    image: bankapp/blocker-service
+#    build: ./blocker-service
+#    container_name: bank-blocker
+#    ports:
+#      - "8083:8083"
+#    depends_on:
+#      - discovery-service
+#      - config-service
+#
+#  cash-service:
+#    image: bankapp/cash-service
+#    build: ./cash-service
+#    container_name: bank-cash
+#    ports:
+#      - "8084:8084"
+#    depends_on:
+#      - accounts-service
+#      - blocker-service
+#      - discovery-service
+#      - config-service
+#
+#  exchange-service:
+#    image: bankapp/exchange-service
+#    build: ./exchange-service
+#    container_name: bank-exchange
+#    ports:
+#      - "8087:8087"
+#    depends_on:
+#      - discovery-service
+#      - config-service
+#
+#  exchange-generator-service:
+#    image: bankapp/exchange-generator-service
+#    build: ./exchange-generator-service
+#    container_name: bank-exchange-generator
+#    ports:
+#      - "8086:8086"
+#    depends_on:
+#      - exchange-service
+#      - discovery-service
+#      - config-service
+#
+#  notifications-service:
+#    image: bankapp/notifications-service
+#    build: ./notifications-service
+#    container_name: bank-notifications
+#    ports:
+#      - "8090:8090"
+#    depends_on:
+#      - discovery-service
+#      - config-service
+#
+#  transfer-service:
+#    image: bankapp/transfer-service
+#    build: ./transfer-service
+#    container_name: bank-transfer
+#    ports:
+#      - "8092:8092"
+#    depends_on:
+#      - accounts-service
+#      - exchange-service
+#      - blocker-service
+#      - discovery-service
+#      - config-service
+
 volumes:
   pgdata:
