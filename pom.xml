@@ -16,7 +16,7 @@
         <relativePath/>
     </parent>
     <modules>
-<!--        <module>front-ui</module>-->
+        <module>front-ui</module>
         <module>accounts-service</module>
         <module>cash-service</module>
         <module>transfer-service</module>
