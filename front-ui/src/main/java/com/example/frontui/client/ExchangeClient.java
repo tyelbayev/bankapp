@@ -5,6 +5,7 @@ import com.example.frontui.dto.RateDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -12,23 +13,18 @@ import java.util.List;
 public class ExchangeClient {
 
     private final WebClient webClient;
-    private final String gatewayBaseUrl;
 
-    public ExchangeClient(WebClient.Builder webClientBuilder,
-                          @Value("${gateway.base-url}") String gatewayBaseUrl) {
-        this.webClient = webClientBuilder.baseUrl(gatewayBaseUrl).build();
-        this.gatewayBaseUrl = gatewayBaseUrl;
+    public ExchangeClient(WebClient webClient) {
+        this.webClient = webClient;
     }
 
-    public List<CurrencyDto> getCurrencies() {
+    public Mono<List<CurrencyDto>> getCurrencies() {
         return webClient.get()
                 .uri("/exchange/currencies")
                 .retrieve()
                 .bodyToFlux(CurrencyDto.class)
-                .collectList()
-                .block();
+                .collectList();
     }
-
     public List<RateDto> getRates() {
         return webClient.get()
                 .uri("/api/rates")

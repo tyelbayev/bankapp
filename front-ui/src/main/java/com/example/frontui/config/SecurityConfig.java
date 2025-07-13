@@ -5,22 +5,19 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-
+import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain security(ServerHttpSecurity http) {
         http
-                .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/", "/signup", "/login**", "/css/**", "/js/**").permitAll()
-                        .anyExchange().authenticated()
-                )
-                .oauth2Login(Customizer.withDefaults())
-                .logout(logout -> logout.logoutUrl("/logout")); // только URL
-
+                .authorizeExchange(ex -> ex
+                        .pathMatchers("/", "/signup", "/css/**", "/js/**").permitAll()
+                        .anyExchange().authenticated())
+                .oauth2Login(Customizer.withDefaults())   // интерактивный вход
+                .oauth2Client(Customizer.withDefaults()); // ⬅ нужен для WebClient
         return http.build();
     }
-
 }

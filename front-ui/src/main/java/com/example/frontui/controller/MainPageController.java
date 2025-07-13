@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.reactive.result.view.Rendering;
+import reactor.core.publisher.Mono;
 
 import java.security.Principal;
 import java.util.List;
@@ -23,21 +25,30 @@ public class MainPageController {
     }
 
     @GetMapping({"/", "/main"})
-    public String mainPage(Principal principal, Model model) {
+    public Mono<Rendering> mainPage(Principal principal) {
+        if (principal == null) {
+            return Mono.just(Rendering.redirectTo("/login").build());
+        }
+
         String login = principal.getName();
 
-        UserDto user = accountsClient.getUserInfo(login);
-        List<AccountDto> accounts = accountsClient.getAccounts(login);
-        List<CurrencyDto> currencies = exchangeClient.getCurrencies();
-        List<UserDto> users = accountsClient.getAllUsers();
+        Mono<UserDto> userMono = accountsClient.getUserInfo(login);
+        Mono<List<AccountDto>> accountsMono = accountsClient.getAccounts(login);
+        Mono<List<CurrencyDto>> currenciesMono = exchangeClient.getCurrencies();
+        Mono<List<UserDto>> usersMono = accountsClient.getAllUsers();
 
-        model.addAttribute("login", login);
-        model.addAttribute("name", user.getName());
-        model.addAttribute("birthdate", user.getBirthdate());
-        model.addAttribute("accounts", accounts);
-        model.addAttribute("currency", currencies);
-        model.addAttribute("users", users);
-
-        return "main";
+        return Mono.zip(userMono, accountsMono, currenciesMono, usersMono)
+                .map(tuple -> Rendering.view("main")
+                        .modelAttribute("login", login)
+                        .modelAttribute("name", tuple.getT1().getName())
+                        .modelAttribute("birthdate", tuple.getT1().getBirthdate())
+                        .modelAttribute("accounts", tuple.getT2())
+                        .modelAttribute("currency", tuple.getT3())
+                        .modelAttribute("users", tuple.getT4())
+                        .build());
     }
+
+
+
+
 }

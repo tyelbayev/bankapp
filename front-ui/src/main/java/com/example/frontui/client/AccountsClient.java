@@ -7,6 +7,7 @@ import com.example.frontui.dto.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,9 +17,8 @@ public class AccountsClient {
 
     private final WebClient webClient;
 
-    public AccountsClient(WebClient.Builder webClientBuilder,
-                          @Value("${gateway.base-url}") String gatewayBaseUrl) {
-        this.webClient = webClientBuilder.baseUrl(gatewayBaseUrl).build();
+    public AccountsClient(WebClient webClient) {
+        this.webClient = webClient;
     }
 
     public List<String> validateAndRegister(SignupRequest request) {
@@ -30,31 +30,27 @@ public class AccountsClient {
                 .collectList()
                 .block();
     }
-
-    public UserDto getUserInfo(String login) {
+    public Mono<UserDto> getUserInfo(String login) {
         return webClient.get()
                 .uri("/accounts/user/{login}", login)
                 .retrieve()
-                .bodyToMono(UserDto.class)
-                .block();
+                .bodyToMono(UserDto.class);
     }
 
-    public List<AccountDto> getAccounts(String login) {
+    public Mono<List<AccountDto>> getAccounts(String login) {
         return webClient.get()
                 .uri("/accounts/user/{login}/accounts", login)
                 .retrieve()
                 .bodyToFlux(AccountDto.class)
-                .collectList()
-                .block();
+                .collectList();
     }
 
-    public List<UserDto> getAllUsers() {
+    public Mono<List<UserDto>> getAllUsers() {
         return webClient.get()
                 .uri("/accounts/users")
                 .retrieve()
                 .bodyToFlux(UserDto.class)
-                .collectList()
-                .block();
+                .collectList();
     }
 
     public void changePassword(String login, String newPassword) {

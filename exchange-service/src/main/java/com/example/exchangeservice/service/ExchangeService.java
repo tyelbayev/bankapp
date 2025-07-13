@@ -1,5 +1,6 @@
 package com.example.exchangeservice.service;
 
+import com.example.exchangeservice.CurrencyDto;
 import com.example.exchangeservice.model.ExchangeRate;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,20 @@ public class ExchangeService {
         return rate.getValue();
     }
 
-    public List<String> getCurrencyCodes() {
-        return new ArrayList<>(rates.keySet());
+    public List<CurrencyDto> getCurrencyDtos() {
+        return rates.entrySet().stream()
+                .map(e -> new CurrencyDto(
+                        switch (e.getKey()) {
+                            case "USD" -> "Доллар";
+                            case "CNY" -> "Юань";
+                            default    -> "Рубль";
+                        },
+                        e.getKey()))
+                .toList();
     }
+
+    public List<ExchangeRate> getAllRates() {
+        return new ArrayList<>(rates.values());
+    }
+
 }
