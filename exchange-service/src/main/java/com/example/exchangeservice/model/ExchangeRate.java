@@ -5,6 +5,13 @@ import java.math.BigDecimal;
 public class ExchangeRate {
     private String name;
     private String title;
+    private BigDecimal value;
+
+    public ExchangeRate(String name, String title, BigDecimal value) {
+        this.name = name;
+        this.title = title;
+        this.value = value;
+    }
 
     public String getName() {
         return name;
@@ -29,7 +36,4 @@ public class ExchangeRate {
     public void setValue(BigDecimal value) {
         this.value = value;
     }
-
-    private BigDecimal value; // курс по отношению к RUB
-
 }
