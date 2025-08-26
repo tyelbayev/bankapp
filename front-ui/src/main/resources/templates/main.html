@@ -7,7 +7,11 @@
     <script language="JavaScript">
         setInterval(() => {
             var td = document.getElementById('exchange_rates');
-            fetch('/exchange/rates')
+            fetch('http://localhost:8088/exchange/rates', {
+                method: 'GET',
+                credentials: 'include',
+                headers: { 'Accept': 'application/json' }
+            })
                 .then(response => response.json())
                 .then(json => {
                     var table = '<table style="width:100%;margin-left:auto;margin-right:auto;border-radius:2%;padding:10px;background-color:whitesmoke;">';

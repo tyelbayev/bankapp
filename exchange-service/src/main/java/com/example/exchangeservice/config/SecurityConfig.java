@@ -9,17 +9,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-//    @Bean
-//    SecurityFilterChain security(HttpSecurity http) throws Exception {
-//        http
-//                .securityMatcher("/exchange/**")
-//                .authorizeHttpRequests(a -> a
-//                        .requestMatchers("/exchange/rates").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .oauth2ResourceServer(r -> r.jwt());
-//        return http.build();
-//    }
+    @Bean
+    SecurityFilterChain security(HttpSecurity http) throws Exception {
+        return http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(a -> a.anyRequest().permitAll())
+                .build();
+    }
 }
 

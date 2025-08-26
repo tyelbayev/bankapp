@@ -14,11 +14,7 @@ public class GatewaySecurityConfig {
     SecurityWebFilterChain springSecurity(ServerHttpSecurity http) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(ex -> ex
-                        .pathMatchers("/login**", "/assets/**").permitAll()
-                        .anyExchange().authenticated()
-                )
-                .oauth2Login(Customizer.withDefaults())
+                .authorizeExchange(ex -> ex.anyExchange().permitAll())
                 .build();
     }
 }
