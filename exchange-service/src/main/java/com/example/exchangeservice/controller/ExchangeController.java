@@ -3,6 +3,7 @@ package com.example.exchangeservice.controller;
 import com.example.exchangeservice.CurrencyDto;
 import com.example.exchangeservice.model.ExchangeRate;
 import com.example.exchangeservice.service.ExchangeService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ public class ExchangeController {
         this.exchangeService = exchangeService;
     }
 
-    @GetMapping("/currencies")
+    @GetMapping(value = "/currencies", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CurrencyDto> getCurrencies() {
         return exchangeService.getCurrencyDtos();
     }

@@ -28,7 +28,7 @@
                     td.innerHTML = table;
                 })
                 .catch(error => td.innerHTML = 'Ошибка при получении данных курсов валют');
-        }, 1000);
+        }, 10000);
     </script>
 </head>
 
@@ -40,6 +40,8 @@
 <a href="/logout" style="float:right;">
     <b>ВЫЙТИ &cudarrr;</b>
 </a>
+<p th:each="c : ${currencies}" th:text="${c.name + ' / ' + c.title}">Загрузка валют...</p>
+
 <table style="width:70%;margin-left:auto;margin-right:auto;">
     <tr><td style="padding:2px;">
         <form method="post" th:action="${'/user/'+login+'/editPassword'}">
@@ -112,7 +114,7 @@
                     <td>
                         Валюта
                         <select name="currency">
-                            <option th:each="eachCurrency : ${currency}" th:value="${eachCurrency.name()}" th:text="${eachCurrency.getTitle()}"/>
+                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"/>
                         </select>
                     </td>
                     <td>
@@ -138,13 +140,13 @@
                     <td>
                         Со счета
                         <select name="from_currency">
-                            <option th:each="eachCurrency : ${currency}" th:value="${eachCurrency.name()}" th:text="${eachCurrency.getTitle()}"/>
+                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"/>
                         </select>
                     </td>
                     <td>
                         На счет
                         <select name="to_currency">
-                            <option th:each="eachCurrency : ${currency}" th:value="${eachCurrency.name()}" th:text="${eachCurrency.getTitle()}"/>
+                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"/>
                         </select>
                     </td>
                     <td>
@@ -169,13 +171,13 @@
                     <td>
                         Со счета
                         <select name="from_currency">
-                            <option th:each="eachCurrency : ${currency}" th:value="${eachCurrency.name()}" th:text="${eachCurrency.getTitle()}"/>
+                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"/>
                         </select>
                     </td>
                     <td>
                         На счет
                         <select name="to_currency">
-                            <option th:each="eachCurrency : ${currency}" th:value="${eachCurrency.name()}" th:text="${eachCurrency.getTitle()}"/>
+                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"/>
                         </select>
                     </td>
                     <td>

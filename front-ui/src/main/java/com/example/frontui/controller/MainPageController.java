@@ -38,15 +38,26 @@ public class MainPageController {
         Mono<List<UserDto>> usersMono = accountsClient.getAllUsers();
 
         return Mono.zip(userMono, accountsMono, currenciesMono, usersMono)
-                .map(tuple -> Rendering.view("main")
-                        .modelAttribute("login", login)
-                        .modelAttribute("name", tuple.getT1().getName())
-                        .modelAttribute("birthdate", tuple.getT1().getBirthdate())
-                        .modelAttribute("accounts", tuple.getT2())
-                        .modelAttribute("currency", tuple.getT3())
-                        .modelAttribute("users", tuple.getT4())
-                        .build());
+                .map(tuple -> {
+                    System.out.println("=== Currency list ===");
+                    List<CurrencyDto> currencies = tuple.getT3();
+                    if (currencies == null || currencies.isEmpty()) {
+                        System.out.println("Currency list is empty or null");
+                    } else {
+                        currencies.forEach(c -> System.out.println("Currency: " + c.getTitle() + " (" + c.getName() + ")"));
+                    }
+
+                    return Rendering.view("main")
+                            .modelAttribute("login", login)
+                            .modelAttribute("name", tuple.getT1().getName())
+                            .modelAttribute("birthdate", tuple.getT1().getBirthdate())
+                            .modelAttribute("accounts", tuple.getT2())
+                            .modelAttribute("currencies", currencies)
+                            .modelAttribute("users", tuple.getT4())
+                            .build();
+                });
     }
+
 
 
 
