@@ -26,7 +26,10 @@ public class MainPageController {
 
     @GetMapping({"/", "/main"})
     public Mono<Rendering> mainPage(Principal principal) {
+        System.out.println("🟡 Вызван контроллер mainPage");
+
         if (principal == null) {
+            System.out.println("🔒 Principal is null — редирект на /login");
             return Mono.just(Rendering.redirectTo("/login").build());
         }
 
@@ -45,7 +48,16 @@ public class MainPageController {
                         System.out.println("Currency list is empty or null");
                     } else {
                         currencies.forEach(c -> System.out.println("Currency: " + c.getTitle() + " (" + c.getName() + ")"));
+                        System.out.println("✔️ Передаём currencies в модель, size = " + currencies.size());
                     }
+
+                    System.out.println("🟢 Перед отдачей Rendering — model:");
+                    System.out.println("    login = " + login);
+                    System.out.println("    name = " + tuple.getT1().getName());
+                    System.out.println("    birthdate = " + tuple.getT1().getBirthdate());
+                    System.out.println("    accounts = " + tuple.getT2().size());
+                    System.out.println("    currencies = " + (currencies == null ? "null" : currencies.size()));
+                    System.out.println("    users = " + tuple.getT4().size());
 
                     return Rendering.view("main")
                             .modelAttribute("login", login)
@@ -56,6 +68,7 @@ public class MainPageController {
                             .modelAttribute("users", tuple.getT4())
                             .build();
                 });
+
     }
 
 

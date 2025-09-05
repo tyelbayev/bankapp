@@ -40,7 +40,10 @@
 <a href="/logout" style="float:right;">
     <b>ВЫЙТИ &cudarrr;</b>
 </a>
-<p th:each="c : ${currencies}" th:text="${c.name + ' / ' + c.title}">Загрузка валют...</p>
+<ul>
+    <li th:each="c : ${currencies}" th:text="${c.name + ' / ' + c.title}">НЕТ ДАННЫХ</li>
+</ul>
+<p th:text="'Размер списка currencies: ' + ${currencies != null ? #lists.size(currencies) : 'null'}">Список пуст</p>
 
 <table style="width:70%;margin-left:auto;margin-right:auto;">
     <tr><td style="padding:2px;">
@@ -114,7 +117,7 @@
                     <td>
                         Валюта
                         <select name="currency">
-                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"/>
+                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}">НЕ ЗАГРУЖЕНО</option>
                         </select>
                     </td>
                     <td>
@@ -140,13 +143,13 @@
                     <td>
                         Со счета
                         <select name="from_currency">
-                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"/>
+                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"></option>
                         </select>
                     </td>
                     <td>
                         На счет
                         <select name="to_currency">
-                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"/>
+                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"></option>
                         </select>
                     </td>
                     <td>
@@ -171,13 +174,13 @@
                     <td>
                         Со счета
                         <select name="from_currency">
-                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"/>
+                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"></option>
                         </select>
                     </td>
                     <td>
                         На счет
                         <select name="to_currency">
-                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"/>
+                            <option th:each="eachCurrency : ${currencies}" th:value="${eachCurrency.name}" th:text="${eachCurrency.title}"></option>
                         </select>
                     </td>
                     <td>
