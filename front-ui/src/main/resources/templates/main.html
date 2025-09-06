@@ -40,10 +40,6 @@
 <a href="/logout" style="float:right;">
     <b>ВЫЙТИ &cudarrr;</b>
 </a>
-<ul>
-    <li th:each="c : ${currencies}" th:text="${c.name + ' / ' + c.title}">НЕТ ДАННЫХ</li>
-</ul>
-<p th:text="'Размер списка currencies: ' + ${currencies != null ? #lists.size(currencies) : 'null'}">Список пуст</p>
 
 <table style="width:70%;margin-left:auto;margin-right:auto;">
     <tr><td style="padding:2px;">

@@ -22,9 +22,8 @@ public class ExchangeClient {
         return webClient.get()
                 .uri("/exchange/currencies")
                 .retrieve()
-                .bodyToMono(String.class)
-                .doOnNext(json -> System.out.println("📦 Получен JSON: " + json))
-                .thenReturn(List.of());
+                .bodyToFlux(CurrencyDto.class)
+                .collectList();
     }
 
     public List<RateDto> getRates() {
