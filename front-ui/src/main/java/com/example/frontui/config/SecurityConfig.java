@@ -4,20 +4,33 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
+import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
+import org.springframework.web.server.WebFilter;
+import reactor.core.publisher.Mono;
+
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityWebFilterChain security(ServerHttpSecurity http) {
+    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
+                .csrf(csrf -> csrf.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()))
                 .authorizeExchange(ex -> ex
-                        .pathMatchers("/", "/signup", "/css/**", "/js/**").permitAll()
+                        .pathMatchers("/login", "/css/**", "/js/**").permitAll()
                         .anyExchange().authenticated())
-                .oauth2Login(Customizer.withDefaults())   // интерактивный вход
-                .oauth2Client(Customizer.withDefaults()); // ⬅ нужен для WebClient
+                .oauth2Login(Customizer.withDefaults()); // ← для входа через провайдера
         return http.build();
+    }
+
+    // В WebFlux токен лениво создаётся: этот фильтр гарантирует, что cookie появится на GET-страницах.
+    @Bean
+    public WebFilter csrfCookieWebFilter() {
+        return (exchange, chain) -> exchange
+                .getAttributeOrDefault(CsrfToken.class.getName(), Mono.<CsrfToken>empty())
+                .then(chain.filter(exchange));
     }
 }

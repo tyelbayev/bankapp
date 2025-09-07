@@ -38,7 +38,8 @@ public class MainPageController {
                 .onErrorResume(e -> Mono.just(new UserDto()))
                 .switchIfEmpty(Mono.just(new UserDto()));
 
-        Mono<List<AccountDto>> accountsMono = accountsClient.getAccounts(login);
+        Mono<List<AccountDto>> accountsMono = accountsClient.getAccounts(login)
+                .doOnNext(list -> System.out.println("ACC size=" + (list != null ? list.size() : -1)));
         Mono<List<CurrencyDto>> currenciesMono = exchangeClient.getCurrencies();
         Mono<List<UserDto>> usersMono = accountsClient.getAllUsers();
 
