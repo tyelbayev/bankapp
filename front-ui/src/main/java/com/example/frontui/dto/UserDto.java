@@ -13,5 +13,4 @@ public class UserDto {
     public LocalDate getBirthdate() {
         return birthdate;
     }
-// getters and setters
 }

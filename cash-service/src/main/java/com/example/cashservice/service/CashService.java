@@ -17,7 +17,6 @@ public class CashService {
     }
 
     public void processCashOperation(String login, CashRequest request) {
-        // 1. Проверка блокировки
         Boolean blocked = webClient.post()
                 .uri("/blocker/check")
                 .bodyValue(request)
@@ -29,7 +28,6 @@ public class CashService {
             throw new RuntimeException("Operation blocked");
         }
 
-        // 2. Обновление баланса
         webClient.post()
                 .uri("/accounts/user/{login}/cash", login)
                 .bodyValue(request)
@@ -37,7 +35,6 @@ public class CashService {
                 .toBodilessEntity()
                 .block();
 
-        // 3. Уведомление
         webClient.post()
                 .uri("/notifications/user/{login}", login)
                 .bodyValue("Operation: " + request.getAction() + " " + request.getValue() + " " + request.getCurrency())

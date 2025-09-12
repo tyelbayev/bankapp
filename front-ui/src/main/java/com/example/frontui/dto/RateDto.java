@@ -7,5 +7,4 @@ public class RateDto {
     private String name;
     private BigDecimal value;
 
-    // Getters and setters
 }

@@ -16,8 +16,8 @@ public class SecurityConfig {
                 .authorizeExchange(ex -> ex
                         .pathMatchers("/", "/signup", "/css/**", "/js/**").permitAll()
                         .anyExchange().authenticated())
-                .oauth2Login(Customizer.withDefaults())   // интерактивный вход
-                .oauth2Client(Customizer.withDefaults()); // ⬅ нужен для WebClient
+                .oauth2Login(Customizer.withDefaults())
+                .oauth2Client(Customizer.withDefaults());
         return http.build();
     }
 }

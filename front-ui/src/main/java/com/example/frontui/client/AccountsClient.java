@@ -26,7 +26,7 @@ public class AccountsClient {
                 .uri("/accounts/signup")
                 .bodyValue(request)
                 .retrieve()
-                .bodyToFlux(String.class) // допустим, backend возвращает список ошибок или пусто
+                .bodyToFlux(String.class)
                 .collectList()
                 .block();
     }
