@@ -26,7 +26,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // В WebFlux токен лениво создаётся: этот фильтр гарантирует, что cookie появится на GET-страницах.
     @Bean
     public WebFilter csrfCookieWebFilter() {
         return (exchange, chain) -> exchange

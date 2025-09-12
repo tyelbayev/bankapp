@@ -32,14 +32,9 @@ public class MainPageController {
 
         String login = principal.getName();
 
-        Mono<UserDto> userMono = accountsClient.getUserInfo(login)
-                .doOnSubscribe(s -> System.out.println("➡️ getUserInfo(" + login + ")"))
-                .doOnError(e -> System.out.println("❌ getUserInfo error: " + e.getMessage()))
-                .onErrorResume(e -> Mono.just(new UserDto()))
-                .switchIfEmpty(Mono.just(new UserDto()));
+        Mono<UserDto> userMono = accountsClient.getUserInfo(login);
 
-        Mono<List<AccountDto>> accountsMono = accountsClient.getAccounts(login)
-                .doOnNext(list -> System.out.println("ACC size=" + (list != null ? list.size() : -1)));
+        Mono<List<AccountDto>> accountsMono = accountsClient.getAccounts(login);
         Mono<List<CurrencyDto>> currenciesMono = exchangeClient.getCurrencies();
         Mono<List<UserDto>> usersMono = accountsClient.getAllUsers();
 

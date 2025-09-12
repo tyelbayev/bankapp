@@ -12,7 +12,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
-    // на случай если Builder не подкинулся автоконфигом
     @Bean
     public WebClient.Builder webClientBuilder() {
         return WebClient.builder();
@@ -25,7 +24,6 @@ public class WebClientConfig {
             ReactiveOAuth2AuthorizedClientService clientService,
             @Value("${gateway.base-url}") String baseUrl) {
 
-        // токен по client_credentials
         ReactiveOAuth2AuthorizedClientProvider provider =
                 ReactiveOAuth2AuthorizedClientProviderBuilder.builder()
                         .clientCredentials()
@@ -36,18 +34,13 @@ public class WebClientConfig {
         manager.setAuthorizedClientProvider(provider);
 
         var oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(manager);
-        oauth.setDefaultClientRegistrationId("front-ui-s2s"); // <-- ID в application.yml
+        oauth.setDefaultClientRegistrationId("front-ui-s2s");
 
-        // временный логгер для проверки, что Bearer реально подставляется
-        ExchangeFilterFunction authLog = (req, next) -> {
-            String auth = req.headers().getFirst("Authorization");
-            System.out.println("➡️ OUT " + req.method() + " " + req.url() + "  Authorization=" + auth);
-            return next.exchange(req);
-        };
+        ExchangeFilterFunction authLog = (req, next) -> next.exchange(req);
 
         return builder
-                .baseUrl(baseUrl)           // http://localhost:8088 (gateway)
-                .filter(oauth)              // подставляет Bearer автоматически
+                .baseUrl(baseUrl)
+                .filter(oauth)
                 .filter(authLog)
                 .build();
     }

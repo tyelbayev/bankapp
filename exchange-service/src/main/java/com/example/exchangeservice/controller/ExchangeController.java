@@ -31,7 +31,6 @@ public class ExchangeController {
 
     @PostMapping("/update")
     public void updateRates(@RequestBody List<ExchangeRate> rates) {
-        System.out.println("Received rates: " + rates);
         exchangeService.updateRates(rates);
     }
 

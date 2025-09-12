@@ -9,7 +9,6 @@ public class SignupRequest {
     private String name;
     private LocalDate birthdate;
 
-    // Getters and setters
 
     public String getLogin() {
         return login;

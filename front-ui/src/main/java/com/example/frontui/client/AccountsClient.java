@@ -40,23 +40,12 @@ public class AccountsClient {
 
     public Mono<List<AccountDto>> getAccounts(String login) {
         return webClient.get()
-                .uri("/accounts/user/{login}/accounts", login) // если baseUrl=gateway; иначе убери "/accounts"
+                .uri("/accounts/user/{login}/accounts", login)
                 .retrieve()
-                .bodyToFlux(AccountDto.class)   // читаем массив объектов
+                .bodyToFlux(AccountDto.class)
                 .collectList()
-                .doOnSubscribe(s -> System.out.println("➡️ getAccounts(" + login + ")"))
-                .doOnNext(list -> System.out.println("✅ ACC size=" + (list != null ? list.size() : -1)))
-                // 4xx/5xx сюда
-                .onErrorResume(WebClientResponseException.class, ex -> {
-                    System.out.println("💥 getAccounts HTTP " + ex.getRawStatusCode());
-                    System.out.println("↳ body: " + ex.getResponseBodyAsString());
-                    return Mono.just(List.of());
-                })
-                // любые прочие ошибки (сетевые и т.д.)
-                .onErrorResume(ex -> {
-                    System.out.println("💥 getAccounts failed: " + ex);
-                    return Mono.just(List.of());
-                });
+                .onErrorResume(WebClientResponseException.class, ex -> Mono.just(List.of()))
+                .onErrorResume(ex -> Mono.just(List.of()));
     }
 
 

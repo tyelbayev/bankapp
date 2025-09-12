@@ -94,7 +94,7 @@ public class AccountService {
                 .map(currency -> {
                     AccountEntity acc = new AccountEntity();
                     acc.setCurrency(currency);
-                    acc.setValue(0.0); // по умолчанию
+                    acc.setValue(0.0);
                     acc.setUser(user);
                     return acc;
                 })

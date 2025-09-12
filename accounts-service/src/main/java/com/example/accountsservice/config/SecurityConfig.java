@@ -14,11 +14,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
-                        // настроишь под себя:
                         .requestMatchers(HttpMethod.GET, "/accounts/user/*", "/accounts/user/*/accounts", "/accounts/users").authenticated()
                         .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer(oauth -> oauth.jwt()); // ← принимаем Bearer JWT
+                .oauth2ResourceServer(oauth -> oauth.jwt());
 
         return http.build();
     }

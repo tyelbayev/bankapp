@@ -18,7 +18,6 @@ public class TransferService {
     }
 
     public void transfer(String login, TransferRequest request) {
-        // 1. Проверка блокировки
         Boolean blocked = webClient.post()
                 .uri("/blocker/check")
                 .bodyValue(request)
@@ -30,18 +29,15 @@ public class TransferService {
             throw new RuntimeException("Operation blocked");
         }
 
-        // 2. Конвертация валют, если from != to
         BigDecimal amount = request.getValue();
         if (!request.getFromCurrency().equalsIgnoreCase(request.getToCurrency())) {
             BigDecimal rateFrom = getExchangeRate(request.getFromCurrency());
             BigDecimal rateTo = getExchangeRate(request.getToCurrency());
 
-            // RUB → USD → CNY = value / rateFrom * rateTo
-            BigDecimal rubles = amount.multiply(rateFrom); // из валюты в рубли
+            BigDecimal rubles = amount.multiply(rateFrom);
             amount = rubles.divide(rateTo, 2, BigDecimal.ROUND_HALF_UP);
         }
 
-        // 3. Списание со счета отправителя
         TransferOperation debit = new TransferOperation(login, request.getFromCurrency(), request.getValue().negate());
         webClient.post()
                 .uri("/accounts/transfer/debit")
@@ -50,7 +46,6 @@ public class TransferService {
                 .toBodilessEntity()
                 .block();
 
-        // 4. Зачисление получателю
         String recipient = request.getToLogin() != null ? request.getToLogin() : login;
         TransferOperation credit = new TransferOperation(recipient, request.getToCurrency(), amount);
         webClient.post()
@@ -60,7 +55,6 @@ public class TransferService {
                 .toBodilessEntity()
                 .block();
 
-        // 5. Уведомление
         webClient.post()
                 .uri("/notifications/user/{login}", login)
                 .bodyValue("Transferred " + request.getValue() + " " + request.getFromCurrency() +

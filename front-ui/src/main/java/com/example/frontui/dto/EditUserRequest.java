@@ -8,7 +8,6 @@ public class EditUserRequest {
     private LocalDate birthdate;
     private List<String> currencies;
 
-    // Конструкторы, геттеры/сеттеры
 
     public EditUserRequest(String name, LocalDate birthdate, List<String> currencies) {
         this.name = name;
