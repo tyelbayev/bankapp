@@ -1,0 +1,25 @@
+replicaCount: 1
+
+image:
+  repository: docker.io/<твой_логин>/accounts
+  tag: dev
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080        # порт сервиса внутри кластера
+  targetPort: 8080  # порт контейнера (Spring Boot)
+
+readinessProbe:
+  path: /actuator/health/readiness
+livenessProbe:
+  path: /actuator/health/liveness
+
+# Нефидензивные переменные окружения (пароли через Secret ниже)
+env:
+  DB_HOST: accounts-db-postgres
+  DB_PORT: "5432"
+  DB_NAME: accounts
+  DB_USER: accounts
+  OAUTH_ISSUER_URI: http://keycloak-http.keycloak.svc.cluster.local/realms/bank
+  OAUTH_CLIENT_ID: accounts
