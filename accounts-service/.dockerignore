@@ -1,0 +1,6 @@
+**/target/*
+!target/*.jar
+.git
+.idea
+node_modules
+*.iml
