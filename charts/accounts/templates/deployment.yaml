@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "accounts.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
+  {{- if not (dig "enabled" false .Values.autoscaling) }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
@@ -19,9 +19,9 @@ spec:
       {{- end }}
       labels:
         {{- include "accounts.labels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+          {{- with .Values.podLabels }}
+          {{- toYaml . | nindent 8 }}
+          {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -42,16 +42,31 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
-          {{- with .Values.livenessProbe }}
+
+          {{- if .Values.livenessProbe }}
           livenessProbe:
-            {{- toYaml . | nindent 12 }}
+            httpGet:
+              path: {{ .Values.livenessProbe.path }}
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: {{ default 30 .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds:       {{ default 20 .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds:      {{ default 2  .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold:    {{ default 3  .Values.livenessProbe.failureThreshold }}
           {{- end }}
-          {{- with .Values.readinessProbe }}
+
+          {{- if .Values.readinessProbe }}
           readinessProbe:
-            {{- toYaml . | nindent 12 }}
+            httpGet:
+              path: {{ .Values.readinessProbe.path }}
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: {{ default 10 .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds:       {{ default 10 .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds:      {{ default 2  .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold:    {{ default 6  .Values.readinessProbe.failureThreshold }}
           {{- end }}
+
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
