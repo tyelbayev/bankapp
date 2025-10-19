@@ -44,6 +44,41 @@ spec:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
+          env:
+            - name: SPRING_CLOUD_CONFIG_ENABLED
+              value: "false"
+
+            - name: SPRING_EUREKA_CLIENT_ENABLED
+              value: "false"
+
+            # 3) Настройки БД (замени host на имя твоего сервиса Postgres в dev)
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://accounts-pg-postgresql.dev.svc.cluster.local:5432/bankdb"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "bankuser"
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: accounts-secrets
+                  key: db-password
+            - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+              value: "org.postgresql.Driver"
+            - name: SPRING_SQL_INIT_MODE
+              value: "always"
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "update"
+            - name: SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA
+              value: "accounts_schema"
+
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_CREDENTIALS_CLIENT_ID
+              value: "accounts-service"
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_CREDENTIALS_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: accounts-secrets
+                  key: oauth-client-secret
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN_URI
+              value: "http://keycloak-http.keycloak.svc.cluster.local/realms/bankapp/protocol/openid-connect/token"
 
           {{- if .Values.livenessProbe }}
           livenessProbe:
