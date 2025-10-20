@@ -1,0 +1,39 @@
+replicaCount: 1
+
+image:
+  repository: "exchange-generator"
+  tag: "dev"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8081
+  targetPort: 8081
+
+livenessProbe:
+  path: /actuator/health
+readinessProbe:
+  path: /actuator/health
+
+serviceAccount:
+  create: true
+  name: ""
+
+autoscaling:
+  enabled: false
+
+ingress:
+  enabled: false
+
+httpRoute:
+  enabled: false
+
+containerPort: 8081
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: "k8s"
+  - name: SPRING_DATASOURCE_URL
+    value: "jdbc:postgresql://db.dev.svc.cluster.local:5432/bankdb"
+  - name: SPRING_DATASOURCE_USERNAME
+    value: "bankuser"
+resources: {}

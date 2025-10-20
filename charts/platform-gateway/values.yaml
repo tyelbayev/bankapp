@@ -1,0 +1,12 @@
+gateway:
+  name: bank-gateway
+  namespace: dev
+  className: nginx
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP
+      hostname: ""
+      allowedRoutes:
+        namespaces:
+          from: Same

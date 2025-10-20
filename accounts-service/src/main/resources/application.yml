@@ -1,6 +1,54 @@
+server:
+  port: 8081
 spring:
   application:
     name: accounts-service
 
-  config:
-    import: optional:configserver:http://localhost:8888
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bankdb
+    username: bankuser
+    password: bankpass
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: accounts_schema
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_schema: accounts_schema
+
+  sql:
+    init:
+      mode: always
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8089/realms/bankapp
+      client:
+        registration:
+          keycloak-client-credentials:
+            provider: keycloak
+            client-id: accounts-service
+            client-secret: hh7djDEJH2DuZYaagbabbWRDzu7NubBN
+            authorization-grant-type: client_credentials
+            scope: openid
+        provider:
+          keycloak:
+            token-uri: http://localhost:8089/realms/bankapp/protocol/openid-connect/token
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    hostname: accounts-service
+
+logging:
+  level:
+    root: INFO
+    com.example: DEBUG          # твой пакет
+    org.springframework.security: DEBUG
