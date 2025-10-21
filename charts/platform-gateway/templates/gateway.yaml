@@ -6,13 +6,13 @@ metadata:
 spec:
   gatewayClassName: {{ .Values.gateway.className }}
   listeners:
-  {{- range .Values.gateway.listeners }}
-- name: {{ .name }}
-  port: {{ .port }}
-  protocol: {{ .protocol }}
-  {{- if .hostname }}
-hostname: {{ .hostname }}
-  {{- end }}
-allowedRoutes:
-  {{- toYaml .allowedRoutes | nindent 8 }}
-  {{- end }}
+    {{- range $l := .Values.gateway.listeners }}
+    - name: {{ $l.name }}
+      port: {{ $l.port }}
+      protocol: {{ $l.protocol }}
+      {{- if $l.hostname }}
+      hostname: {{ $l.hostname }}
+      {{- end }}
+      allowedRoutes:
+        {{- toYaml $l.allowedRoutes | nindent 8 }}
+    {{- end }}

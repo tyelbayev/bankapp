@@ -51,7 +51,6 @@ spec:
             - name: SPRING_EUREKA_CLIENT_ENABLED
               value: "false"
 
-            # 3) Настройки БД (замени host на имя твоего сервиса Postgres в dev)
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://accounts-pg-postgresql.dev.svc.cluster.local:5432/bankdb"
             - name: SPRING_DATASOURCE_USERNAME

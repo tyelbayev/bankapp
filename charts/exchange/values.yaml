@@ -32,7 +32,18 @@ ingress:
   enabled: false
 
 httpRoute:
-  enabled: false
+  enabled: true
+  parentRefs:
+    - name: bank-gateway
+      namespace: dev
+  hostnames:
+    - exchange.dev.local
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
 
 containerPort: 8081
 resources: {}

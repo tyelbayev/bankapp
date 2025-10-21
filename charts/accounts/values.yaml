@@ -34,4 +34,16 @@ ingress:
   enabled: false
 
 httpRoute:
-  enabled: false
+  enabled: true
+  parentRefs:
+    - name: bank-gateway
+      namespace: dev
+  hostnames:
+    - accounts.dev.local
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+secrets:
+  name: accounts-secrets
