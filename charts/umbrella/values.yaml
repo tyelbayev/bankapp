@@ -1,0 +1,45 @@
+global:
+  image:
+    pullPolicy: IfNotPresent
+  namespace: default
+
+kafka:
+  enabled: false
+  replicaCount: 2
+  service:
+    port: 9092
+  autoprovision:
+    enabled: true
+    topics:
+      - name: notifications
+        partitions: 3
+        replicationFactor: 2
+      - name: exchange-events
+        partitions: 6
+        replicationFactor: 2
+
+accounts:
+  enabled: true
+  image:
+    repository: accounts
+    tag: dev
+  service:
+    type: ClusterIP
+
+auth:
+  enabled: true
+  image:
+    repository: auth
+    tag: dev
+
+gateway:
+  enabled: true
+
+notifications:
+  enabled: true
+
+exchange:
+  enabled: true
+
+exchangeGenerator:
+  enabled: true

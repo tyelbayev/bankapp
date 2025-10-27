@@ -1,0 +1,26 @@
+replicaCount: 3
+persistence:
+  size: 100Gi
+resources:
+  requests:
+    cpu: "1"
+    memory: 2Gi
+  limits:
+    cpu: "2"
+    memory: 4Gi
+autoprovision:
+  enabled: true
+  topics:
+    - name: notifications
+      partitions: 6
+      replicationFactor: 3
+      config:
+        min.insync.replicas: "2"
+        cleanup.policy: delete
+        retention.ms: "604800000"
+    - name: exchange-events
+      partitions: 12
+      replicationFactor: 3
+      config:
+        min.insync.replicas: "2"
+        retention.ms: "1209600000"

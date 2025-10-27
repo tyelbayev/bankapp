@@ -1,0 +1,15 @@
+global:
+  namespace: prod
+
+kafka:
+  enabled: true
+  replicaCount: 3
+  autoprovision:
+    topics:
+      - name: notifications
+        partitions: 6
+        replicationFactor: 3
+      - name: exchange-events
+        partitions: 12
+        replicationFactor: 3
+

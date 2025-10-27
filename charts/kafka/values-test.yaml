@@ -1,0 +1,19 @@
+replicaCount: 2
+persistence:
+  size: 10Gi
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+autoprovision:
+  enabled: true
+  topics:
+    - name: notifications
+      partitions: 3
+      replicationFactor: 2
+    - name: exchange-events
+      partitions: 6
+      replicationFactor: 2

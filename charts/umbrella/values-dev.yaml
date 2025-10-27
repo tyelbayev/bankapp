@@ -1,0 +1,34 @@
+global:
+  namespace: dev
+
+kafka:
+  enabled: true
+  replicaCount: 1
+  autoprovision:
+    enabled: true
+    topics:
+      - name: notifications
+        partitions: 1
+        replicationFactor: 1
+      - name: exchange-events
+        partitions: 1
+        replicationFactor: 1
+
+accounts:
+  image:
+    tag: dev
+auth:
+  image:
+    tag: dev
+exchange:
+  image:
+    tag: dev
+exchangeGenerator:
+  image:
+    tag: dev
+notifications:
+  image:
+    tag: dev
+gateway:
+  image:
+    tag: dev

@@ -1,0 +1,57 @@
+stages: ["deploy:kafka", "deploy:services"]
+
+.variables-defaults: &defaults
+  HELM_RELEASE: "bank"
+  UMBRELLA_DIR: "charts/umbrella"
+  KUBE_NAMESPACE: "dev"
+
+.deploy-common: &deploy
+  image: alpine/helm:3.14.4
+  before_script:
+    - helm version
+    - helm dependency build "$UMBRELLA_DIR"
+
+kafka:deploy:
+  stage: "deploy:kafka"
+  <<: *deploy
+  script:
+    - helm upgrade --install "$HELM_RELEASE" "$UMBRELLA_DIR" \
+      -n "$KUBE_NAMESPACE" \
+      -f "$UMBRELLA_DIR/values-${KUBE_NAMESPACE}.yaml" \
+      --set kafka.enabled=true \
+      --set accounts.enabled=false \
+      --set auth.enabled=false \
+      --set gateway.enabled=false \
+      --set notifications.enabled=false \
+      --set exchange.enabled=false \
+      --set exchangeGenerator.enabled=false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
+      variables: { KUBE_NAMESPACE: "dev" }
+    - if: $CI_COMMIT_BRANCH == "test"
+      variables: { KUBE_NAMESPACE: "test" }
+    - if: $CI_COMMIT_TAG =~ /prod.*/
+      variables: { KUBE_NAMESPACE: "prod" }
+
+services:deploy:
+  stage: "deploy:services"
+  needs: ["kafka:deploy"]
+  <<: *deploy
+  script:
+    - helm upgrade --install "$HELM_RELEASE" "$UMBRELLA_DIR" \
+      -n "$KUBE_NAMESPACE" \
+      -f "$UMBRELLA_DIR/values-${KUBE_NAMESPACE}.yaml" \
+      --set kafka.enabled=true \
+      --set accounts.enabled=true \
+      --set auth.enabled=true \
+      --set gateway.enabled=true \
+      --set notifications.enabled=true \
+      --set exchange.enabled=true \
+      --set exchangeGenerator.enabled=true
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
+      variables: { KUBE_NAMESPACE: "dev" }
+    - if: $CI_COMMIT_BRANCH == "test"
+      variables: { KUBE_NAMESPACE: "test" }
+    - if: $CI_COMMIT_TAG =~ /prod.*/
+      variables: { KUBE_NAMESPACE: "prod" }

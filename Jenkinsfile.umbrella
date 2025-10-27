@@ -1,0 +1,76 @@
+pipeline {
+  agent any
+  options { timestamps() }
+  parameters {
+    choice(name: 'ENV', choices: ['dev','test','prod'], description: 'Target environment')
+    string(name: 'NAMESPACE', defaultValue: 'dev', description: 'K8s namespace')
+    string(name: 'RELEASE', defaultValue: 'bank', description: 'Helm release (umbrella)')
+    string(name: 'UMBRELLA_PATH', defaultValue: 'charts/umbrella', description: 'Path to umbrella chart')
+    booleanParam(name: 'DRY_RUN', defaultValue: false, description: 'Helm --dry-run --debug')
+  }
+  environment {
+    KUBECONFIG = "$WORKSPACE/.kube/config"
+  }
+  stages {
+    stage('Prepare kubeconfig') {
+      steps {
+        withCredentials([file(credentialsId: 'KUBECONFIG_CRED', variable: 'KCFG')]) {
+          sh 'mkdir -p $WORKSPACE/.kube && cp "$KCFG" "$KUBECONFIG" && chmod 600 "$KUBECONFIG"'
+          sh 'kubectl version --client && kubectl config get-contexts || true'
+        }
+      }
+    }
+    stage('Helm deps') {
+      steps {
+        sh 'helm version'
+        sh 'helm dependency build ${UMBRELLA_PATH}'
+      }
+    }
+    stage('Deploy Kafka (umbrella subset)') {
+      steps {
+        script {
+          def vals = "${params.UMBRELLA_PATH}/values-${params.ENV}.yaml"
+          def cmd = '''helm upgrade --install ${RELEASE} ${UMBRELLA_PATH} \
+            -n ${NAMESPACE} \
+            -f ${VALS} \
+            --set kafka.enabled=true \
+            --set accounts.enabled=false \
+            --set auth.enabled=false \
+            --set gateway.enabled=false \
+            --set notifications.enabled=false \
+            --set exchange.enabled=false \
+            --set exchangeGenerator.enabled=false'''
+          if (params.DRY_RUN) { cmd += ' --dry-run --debug' }
+          sh """
+            VALS=${vals}
+            if [ ! -f "$VALS" ]; then VALS=${params.UMBRELLA_PATH}/values.yaml; fi
+            ${cmd}
+          """
+        }
+      }
+    }
+    stage('Deploy Services (umbrella)') {
+      steps {
+        script {
+          def vals = "${params.UMBRELLA_PATH}/values-${params.ENV}.yaml"
+          def cmd = '''helm upgrade --install ${RELEASE} ${UMBRELLA_PATH} \
+            -n ${NAMESPACE} \
+            -f ${VALS} \
+            --set kafka.enabled=true \
+            --set accounts.enabled=true \
+            --set auth.enabled=true \
+            --set gateway.enabled=true \
+            --set notifications.enabled=true \
+            --set exchange.enabled=true \
+            --set exchangeGenerator.enabled=true'''
+          if (params.DRY_RUN) { cmd += ' --dry-run --debug' }
+          sh """
+            VALS=${vals}
+            if [ ! -f "$VALS" ]; then VALS=${params.UMBRELLA_PATH}/values.yaml; fi
+            ${cmd}
+          """
+        }
+      }
+    }
+  }
+}

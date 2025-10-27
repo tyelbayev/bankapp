@@ -1,0 +1,41 @@
+apiVersion: v2
+name: bankapp-umbrella
+version: 0.1.0
+description: Umbrella chart for bank microservices and Kafka
+dependencies:
+  - name: kafka
+    version: ">=0.1.0"
+    repository: "file://../kafka"
+    alias: kafka
+    condition: kafka.enabled
+
+  - name: accounts
+    version: ">=0.1.0"
+    repository: "file://../accounts"
+    alias: accounts
+    condition: accounts.enabled
+  - name: auth
+    version: ">=0.1.0"
+    repository: "file://../auth"
+    alias: auth
+    condition: auth.enabled
+  - name: gateway
+    version: ">=0.1.0"
+    repository: "file://../gateway"
+    alias: gateway
+    condition: gateway.enabled
+  - name: notifications
+    version: ">=0.1.0"
+    repository: "file://../notifications"
+    alias: notifications
+    condition: notifications.enabled
+  - name: exchange
+    version: ">=0.1.0"
+    repository: "file://../exchange"
+    alias: exchange
+    condition: exchange.enabled
+  - name: exchange-generator
+    version: ">=0.1.0"
+    repository: "file://../exchange-generator"
+    alias: exchangeGenerator
+    condition: exchangeGenerator.enabled

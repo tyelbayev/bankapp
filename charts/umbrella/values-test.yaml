@@ -1,0 +1,15 @@
+global:
+  namespace: test
+
+kafka:
+  enabled: true
+  replicaCount: 2
+  autoprovision:
+    topics:
+      - name: notifications
+        partitions: 3
+        replicationFactor: 2
+      - name: exchange-events
+        partitions: 6
+        replicationFactor: 2
+

@@ -1,0 +1,52 @@
+{{- if .Values.autoprovision.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "kafka.fullname" . }}-topics
+  labels:
+    {{- include "kafka.labels" . | nindent 4 }}
+spec:
+  backoffLimit: {{ .Values.autoprovision.backoffLimit }}
+  template:
+    metadata:
+      labels:
+        {{- include "kafka.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: create-topics
+          image: "{{ .Values.autoprovision.image.repository }}:{{ .Values.autoprovision.image.tag }}"
+          imagePullPolicy: {{ .Values.autoprovision.image.pullPolicy }}
+          env:
+            - name: BOOTSTRAP
+              value: {{ include "kafka.fullname" . }}:{{ .Values.service.port | quote }}
+          command:
+              - bash
+                - -ec
+                - |
+                set -euo pipefail
+                echo "Waiting for Kafka at ${BOOTSTRAP}..."
+                for i in {1..60}; do
+                if kafka-broker-api-versions.sh --bootstrap-server "$BOOTSTRAP" >/dev/null 2>&1; then
+                echo "Kafka is up"; break
+                fi
+                echo "Retry $i"; sleep 5
+                done
+            
+            {{- range $t := .Values.autoprovision.topics }}
+                echo "Creating topic {{ $t.name }}..."
+                kafka-topics.sh --bootstrap-server "$BOOTSTRAP" \
+                --create \
+                --if-not-exists \
+                --topic {{ $t.name }} \
+                --partitions {{ $t.partitions }} \
+                --replication-factor {{ $t.replicationFactor }}
+            {{- if $t.config }}
+            {{- range $k, $v := $t.config }}
+                kafka-configs.sh --bootstrap-server "$BOOTSTRAP" \
+                --entity-type topics --entity-name {{ $t.name }} \
+                --alter --add-config {{ $k }}={{ $v }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+  {{- end }}
