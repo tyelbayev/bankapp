@@ -78,7 +78,8 @@ spec:
                   key: oauth-client-secret
             - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN_URI
               value: "http://keycloak-http.keycloak.svc.cluster.local/realms/bankapp/protocol/openid-connect/token"
-
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: "file:/config/"
           {{- if .Values.livenessProbe }}
           livenessProbe:
             httpGet:
@@ -111,6 +112,9 @@ spec:
           {{- end }}
       {{- with .Values.volumes }}
       volumes:
+        - name: kafka-config
+          configMap:
+            name: {{ include "svc.fullname" . }}-kafka
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}

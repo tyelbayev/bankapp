@@ -58,3 +58,17 @@ volumeMounts: []
 nodeSelector: {}
 affinity: {}
 tolerations: []
+kafka:
+  bootstrapServers: "kafka:9092"
+  producer:
+    enabled: false
+  consumer:
+    enabled: true
+    enableAutoCommit: false
+    autoOffsetReset: "latest"
+  listener:
+    ackMode: "MANUAL_IMMEDIATE"
+    concurrency: 3
+app:
+  topics:
+    notifications: "notifications"

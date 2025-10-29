@@ -48,3 +48,16 @@ env:
   - name: SPRING_DATASOURCE_USERNAME
     value: "bankuser"
 resources: {}
+kafka:
+  bootstrapServers: "kafka:9092"
+  producer:
+    enabled: true
+    acks: "all"
+    retries: 10
+    idempotence: true
+  consumer:
+    enabled: false
+app:
+  topics:
+    notifications: "notifications"
+    exchange: "exchange-events"

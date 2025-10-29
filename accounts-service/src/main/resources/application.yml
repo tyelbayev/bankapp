@@ -39,6 +39,18 @@ spring:
         provider:
           keycloak:
             token-uri: http://localhost:8089/realms/bankapp/protocol/openid-connect/token
+
+  kafka:
+    properties:
+      enable.idempotence: true
+    producer:
+      acks: all
+      retries: 10
+      delivery-timeout-ms: 120000
+      request-timeout-ms: 30000
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 eureka:
   client:
     service-url:

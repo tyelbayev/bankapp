@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "svc.fullname" . }}-kafka
+  labels:
+    {{- include "svc.labels" . | nindent 4 }}
+data:
+  application-kafka.yaml: |
+    spring:
+      kafka:
+        bootstrap-servers: {{ .Values.kafka.bootstrapServers | default "kafka:9092" }}
+
+        {{- if .Values.kafka.producer.enabled }}
+        producer:
+          acks: {{ .Values.kafka.producer.acks | default "all" }}
+          retries: {{ .Values.kafka.producer.retries | default 10 }}
+          key-serializer: org.apache.kafka.common.serialization.StringSerializer
+          value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        properties:
+          enable.idempotence: {{ .Values.kafka.producer.idempotence | default true }}
+        {{- end }}
+
+        {{- if .Values.kafka.consumer.enabled }}
+        consumer:
+          group-id: {{ .Values.kafka.consumer.groupId | default (include "svc.fullname" .) }}
+          enable-auto-commit: {{ .Values.kafka.consumer.enableAutoCommit | default false }}
+          auto-offset-reset: {{ .Values.kafka.consumer.autoOffsetReset | default "latest" }}
+          key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+        listener:
+          ack-mode: {{ .Values.kafka.listener.ackMode | default "MANUAL_IMMEDIATE" }}
+          concurrency: {{ .Values.kafka.listener.concurrency | default 1 }}
+        properties:
+          spring.json.trusted.packages: "*"
+        {{- end }}
+
+    app:
+      topics:
+        notifications: {{ .Values.app.topics.notifications | default "notifications" }}
+        exchange: {{ .Values.app.topics.exchange | default "exchange-events" }}

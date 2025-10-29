@@ -1,10 +1,11 @@
-package com.example.accountsservice.kafka;
+package com.example.cashservice.kafka;
 
 
-import com.example.accountsservice.model.NotificationEvent;
+import com.example.cashservice.dto.NotificationEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
 @Service
 public class NotificationPublisher {
     private final KafkaTemplate<String, Object> template;

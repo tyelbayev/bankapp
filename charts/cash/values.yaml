@@ -47,3 +47,16 @@ httpRoute:
 
 containerPort: 8081
 resources: {}
+
+kafka:
+  bootstrapServers: "kafka:9092"
+  producer:
+    enabled: true
+    acks: "all"
+    retries: 10
+    idempotence: true
+  consumer:
+    enabled: false
+app:
+  topics:
+    notifications: "notifications"
