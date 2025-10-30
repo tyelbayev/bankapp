@@ -1,0 +1,15 @@
+com\example\accountsservice\dto\UserDto.class
+com\example\accountsservice\config\Jersey3TransportClientFactoriesConfig.class
+com\example\accountsservice\service\OAuthWebClientService.class
+com\example\accountsservice\dto\TransferOperation.class
+com\example\accountsservice\controller\AccountController.class
+com\example\accountsservice\dto\EditUserRequest.class
+com\example\accountsservice\model\AccountEntity.class
+com\example\accountsservice\AccountsServiceApplication.class
+com\example\accountsservice\repository\AccountRepository.class
+com\example\accountsservice\repository\UserRepository.class
+com\example\accountsservice\dto\AccountDto.class
+com\example\accountsservice\dto\SignupRequest.class
+com\example\accountsservice\model\UserEntity.class
+com\example\accountsservice\config\WebClientOAuth2Config.class
+com\example\accountsservice\service\AccountService.class

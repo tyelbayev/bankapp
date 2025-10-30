@@ -1,0 +1,15 @@
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\repository\AccountRepository.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\service\AccountService.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\controller\AccountController.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\dto\SignupRequest.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\config\Jersey3TransportClientFactoriesConfig.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\dto\TransferOperation.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\service\OAuthWebClientService.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\repository\UserRepository.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\dto\EditUserRequest.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\config\WebClientOAuth2Config.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\AccountsServiceApplication.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\model\UserEntity.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\dto\AccountDto.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\dto\UserDto.java
+C:\projects\bankapp\accounts-service\src\main\java\com\example\accountsservice\model\AccountEntity.java
