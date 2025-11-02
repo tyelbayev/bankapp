@@ -1,6 +1,35 @@
 spring:
   application:
     name: transfer-service
+  kafka:
+    bootstrap-servers: PLAINTEXT://kafka.dev.svc.cluster.local:9092
+    client-id: ${spring.application.name}
+    properties:
+      spring.kafka.observation-enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus,metrics,env,configprops"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  observations:
+    enable:
+      all: true
+
+management.tracing:
+  enabled: true
+  sampling:
+    probability: 1.0
+management.zipkin:
+  tracing:
+    endpoint: http://zipkin.dev.svc.cluster.local:9411/api/v2/spans
 
   datasource:
     url: jdbc:postgresql://localhost:5432/bankdb

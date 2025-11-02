@@ -1,6 +1,7 @@
 package com.example.accountsservice.service;
 
 import com.example.accountsservice.dto.*;
+import com.example.accountsservice.metrics.BusinessMetrics;
 import com.example.accountsservice.model.AccountEntity;
 import com.example.accountsservice.model.UserEntity;
 import com.example.accountsservice.repository.AccountRepository;
@@ -16,6 +17,12 @@ public class AccountService {
     @Autowired
     private UserRepository userRepository;
     private AccountRepository accountRepository;
+    private final BusinessMetrics metrics;
+
+    public AccountService(AccountRepository accountRepository, BusinessMetrics metrics) {
+        this.accountRepository = accountRepository;
+        this.metrics = metrics;
+    }
 
     public List<String> validateAndRegister(SignupRequest request) {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
